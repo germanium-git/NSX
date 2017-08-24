@@ -37,7 +37,6 @@ class NSX:
     def findswitch(self, swname):
         try:
             r = requests.get('https://' + self.nsx_ip + '/api/2.0/vdn/virtualwires', auth=(self.login, self.pswd), verify=False, headers=self.headers)
-            #pprint(r.text)
 
         except requests.exceptions.Timeout as e:
             print('connect - Timeout error: {}'.format(e))
@@ -233,5 +232,4 @@ class NSX:
             print('connect - TooManyRedirects error: {}'.format(e))
         except (ValueError, KeyError, TypeError) as e:
             print('connect - JSON format error: {}'.format(e))
-
 
