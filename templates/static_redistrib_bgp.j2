@@ -1,0 +1,59 @@
+<routing>
+<bgp>
+<bgpNeighbours>
+<bgpNeighbour>
+<bgpFilters>
+<bgpFilter>
+<direction>out</direction>
+<action>deny</action>
+<network>0.0.0.0/0</network>
+</bgpFilter>
+{% for item in routes %}
+<bgpFilter>
+<direction>out</direction>
+<action>permit</action>
+<network>{{item.route}}</network>
+</bgpFilter>
+{% endfor %}
+</bgpFilters>
+</bgpNeighbour>
+</bgpNeighbours>
+<redistribution>
+<enabled>true</enabled> <!-- Optional. Defaults to false. -->
+<rules>
+<rule>
+<id>0</id>
+<from>
+<isis>false</isis> <!-- Optional. Defaults to false -->
+<ospf>false</ospf> <!-- Optional. Defaults to false -->
+<bgp>false</bgp> <!-- Optional. Defaults to false -->
+<static>true</static> <!-- Optional. Defaults to false -->
+<connected>false</connected> <!-- Optional. Defaults to false -->
+</from>
+<action>permit</action> <!-- Mandatory. Valid values are deny|permit -->
+</rule>
+</rules>
+</redistribution>
+</bgp>
+<staticRouting>
+<staticRoutes>
+<route>
+<mtu>1500</mtu>
+<description></description> <!-- Optional -->
+<type>user</type>
+<vnic>1</vnic>
+<network>192.168.40.0/24</network>
+<nextHop>172.16.40.3</nextHop>
+<adminDistance>1</adminDistance>
+</route>
+<route>
+<mtu>1500</mtu>
+<description></description>
+<type>user</type>
+<vnic>1</vnic>
+<network>0.0.0.0/0</network>
+<nextHop>172.16.40.2</nextHop>
+<adminDistance>250</adminDistance>
+</route>
+</staticRoutes>
+</staticRouting>

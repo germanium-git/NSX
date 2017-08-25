@@ -1,0 +1,23 @@
+<bgp>
+<enabled>true</enabled> <!-- Optional. Default is false -->
+<localAS>{{localAS}}</localAS> <!-- Valid values are : 1-65534 -->
+<bgpNeighbours>
+<bgpNeighbour>
+<ipAddress>{{ipAddress}}</ipAddress> <!-- IPv4 only. IPv6 support not supported -->
+<remoteAS>{{remoteAS}}</remoteAS> <!-- Valid values are 0-65535 -->
+<weight>60</weight> <!-- Optional. Default is 60. Valid values are 0-65535 -->
+<holdDownTimer>15</holdDownTimer> <!-- Optional. Default is 180 seconds. Valid values are : 2-65535. -->
+<keepAliveTimer>5</keepAliveTimer> <!-- Optional. Default is 60 seconds. Valid values are : 1-65534. -->
+<password>{{md5}}</password> <!-- Optional -->
+<bgpFilters>
+<bgpFilter>
+<direction>out</direction>
+<action>deny</action>
+<network>0.0.0.0/0</network>
+</bgpFilter>
+</bgpFilters>
+</bgpNeighbour>
+</bgpNeighbours>
+<gracefulRestart>true</gracefulRestart>
+<defaultOriginate>false</defaultOriginate>
+</bgp>

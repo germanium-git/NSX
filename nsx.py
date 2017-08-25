@@ -1,8 +1,47 @@
 import requests
 from pprint import pprint
+from jinja2 import Template
+import getpass
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+
+def credentials(inputfile):
+    # Import credentials from YAML file
+    with open(inputfile, 'r') as f:
+        s = f.read()
+
+    # Read the directory of credentials from file
+    nsx_cred = yaml.load(s)
+
+    nsx_ip = raw_input("NSX manager IP [%s]: " % nsx_cred['nsx_ip']) or nsx_cred['nsx_ip']
+    account = raw_input("Account [%s]: " % nsx_cred['account']) or nsx_cred['account']
+    if 'passw' in vm_cred:
+        passw = getpass.getpass(prompt='Use the stored password or enter new one: ', stream=None) or nsx_cred['passw']
+        passw = nsx_cred['passw']
+    else:
+        passw = 'None'
+        while passw == 'None' or passw == '':
+            passw = getpass.getpass(prompt='Password: ', stream=None)
+
+    return nsx_ip, account, passw
+
+
+
+def createbody(template, vars):
+    # CREATE Body with Jinja2 template
+    with open(template) as f:
+        s = f.read()
+    template = Template(s)
+
+    # Define XML Body - Global Routing > router ID
+    xml_body = template.render(vars)
+
+    return xml_body
+
+
 
 class NSX:
 
