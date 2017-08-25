@@ -18,7 +18,7 @@ def credentials(inputfile):
 
     nsx_ip = raw_input("NSX manager IP [%s]: " % nsx_cred['nsx_ip']) or nsx_cred['nsx_ip']
     account = raw_input("Account [%s]: " % nsx_cred['account']) or nsx_cred['account']
-    if 'passw' in vm_cred:
+    if 'passw' in nsx_cred:
         passw = getpass.getpass(prompt='Use the stored password or enter new one: ', stream=None) or nsx_cred['passw']
         passw = nsx_cred['passw']
     else:
