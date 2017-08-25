@@ -7,28 +7,20 @@ from nsx import credentials
 
 inputs = 'inputs/nsx.yml'
 
-# Specify manually the distributed port group to be created
-dportgroup = raw_input("Distributed port group: ")
-vlanid = ''
-while not vlanid.isdigit():
-    vlanid = raw_input("VLAN-ID: ")
-
-
+# Specify manually the logical switch name to be created
+lswitchname = raw_input("Distributed port group: ")
 
 # Create an instance of Class vSphere
 cred = credentials(inputs)
 nsx = NSX(*cred)
 
-
-my_vars = { 'lswitchname': lswitchname }
-
-nsx = NSX(nsx_ip, account, passw)
+my_vars = {'lswitchname': lswitchname}
 
 
 # Define XML Body - Global Routing > router ID
 xml_switch = createbody("templates/switch.j2", my_vars)
 
-# Configure Router ID
+# Create logical switch
 nsx.createsw(xml_switch)
 
 
