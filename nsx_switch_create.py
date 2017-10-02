@@ -59,3 +59,13 @@ else:
     print('\nCreating logical switch')
     nsx.createsw(xml_switch, sw['vdnScopeId'])
 
+    # Find dvswitch-id and VXLAN VNI
+    print('\nSearching for logical switch id & Segment ID')
+    swid = (nsx.findswitch(lswitchname))
+
+    if swid[0] and swid[1]:
+        cprint('\nThe Logical Switch is created as virtualwire-' + swid[0], 'green')
+        cprint('Segment-ID: ' + str(swid[1]), 'green')
+    else:
+        cprint("\nThe switch doesn't exist", 'red')
+

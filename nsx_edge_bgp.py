@@ -6,7 +6,7 @@ from nsx import createbody
 import yaml
 
 
-inputs = 'inputs/nsx.yml'
+inputs = 'inputs/nsx_mylab.yml'
 
 # Specify manually the logical switch name to be created
 path = raw_input("Path to input YAML file specifying PE parameters: ")

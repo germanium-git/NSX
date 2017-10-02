@@ -13,7 +13,7 @@ import sys
 # Select the instance of NSX manager to be configured - as argument
 inputs = 'inputs/nsx_' + seldc(sys.argv[1:]) + '.yml'
 # Select the instance of NSX manager to be configured - manually
-# inputs = raw_input("Choose NSX Manager credentila specification [%s]:"  % 'inputs/nsx.yml') or 'inputs/nsx.yml'
+# inputs = raw_input("Choose NSX Manager credentila specification [%s]:"  % 'inputs/nsx_mylab.yml') or 'inputs/nsx_mylab.yml'
 
 
 # Specify parameters of the Edge to be created - as argument
