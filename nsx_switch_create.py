@@ -16,18 +16,19 @@ inputs = 'inputs/nsx_' + seldc(sys.argv[1:]) + '.yml'
 # inputs = raw_input("Choose NSX Manager credentila specification [%s]:"  % 'inputs/nsx.yml') or 'inputs/nsx.yml'
 
 
-# Specify manually the logical switch name to be created
-print('Logical switch name should follow this convention: FIPODx-PECEIC-172.16.x0.0m28')
-
-lswitchname = raw_input("Logical switch: ")
-
-
 # Path to YAML file specifying Logical Switch parameters - same as credentials
 with open(inputs, 'r') as f:
     s = f.read()
 
 # Read the directory of credentials and vdnScopeId
 sw = yaml.load(s)
+
+
+# Specify manually the logical switch name to be created
+print('Logical switch name should follow this convention: %s' % sw['lsw_name'])
+
+lswitchname = raw_input("Logical switch: ")
+
 
 # Print configuration summary
 print('\n')
@@ -68,4 +69,3 @@ else:
         cprint('Segment-ID: ' + str(swid[1]), 'green')
     else:
         cprint("\nThe switch doesn't exist", 'red')
-
