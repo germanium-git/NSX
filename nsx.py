@@ -1,11 +1,48 @@
 import requests
 from pprint import pprint
 from jinja2 import Template
+import yaml
 import getpass
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+import sys, getopt
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+
+
+def seldc(argv):
+    """
+    :param argv: Command line argumets
+    :return:     Name of the inventory file
+    """
+    inp = ''
+    try:
+        opts, args = getopt.getopt(argv,"hi:")
+    except getopt.GetoptError:
+        print 'Use this script with the parameter e.g.:'
+        print 'python <script>.py -i <DC>'
+        print 'python <script>.py -h for more information'
+        sys.exit()
+    for opt, arg in opts:
+        if opt == '-h':
+            print 'Use this script with in nventory parameter'
+            print(' -i lpr - for LPR lab ')
+            print(' -i hga - for HGA lab ')
+            sys.exit()
+        elif opt in ("-i"):
+            if arg == 'lpr' or arg == 'hga':
+                inp = arg
+            else:
+                print('Invalid argument')
+                sys.exit()
+    if not(opts):
+        print 'Use this script with the parameter e.g.:'
+        print 'python <script>.py -i <DC>'
+        print 'python <script>.py -h for more information'
+        sys.exit()
+    return inp
+
 
 
 def credentials(inputfile):
@@ -75,7 +112,7 @@ class NSX:
 
     def findswitch(self, swname):
         try:
-            r = requests.get('https://' + self.nsx_ip + '/api/2.0/vdn/virtualwires', auth=(self.login, self.pswd), verify=False, headers=self.headers)
+            r = requests.get('https://' + self.nsx_ip + '/api/2.0/vdn/virtualwires?startindex=0&pagesize=1024', auth=(self.login, self.pswd), verify=False, headers=self.headers)
 
         except requests.exceptions.Timeout as e:
             print('connect - Timeout error: {}'.format(e))
@@ -99,11 +136,11 @@ class NSX:
         return switchid, vni
 
 
-    def createsw(self, cfg):
+    def createsw(self, cfg, tzone):
         try:
-            r = requests.post('https://' + self.nsx_ip + '/api/2.0/vdn/scopes/vdnscope-1/virtualwires', data=cfg,
+            r = requests.post('https://' + self.nsx_ip + '/api/2.0/vdn/scopes/' + tzone + '/virtualwires', data=cfg,
                               auth=(self.login, self.pswd), verify=False, headers=self.headers)
-            pprint(r.text)
+            pprint(r)
 
         except requests.exceptions.Timeout as e:
             print('connect - Timeout error: {}'.format(e))
@@ -140,7 +177,7 @@ class NSX:
         try:
             r = requests.post('https://' + self.nsx_ip + '/api/4.0/edges', data=cfg,
                               auth=(self.login, self.pswd), verify=False, headers=self.headers)
-            pprint(r.text)
+            print(r)
 
         except requests.exceptions.Timeout as e:
             print('connect - Timeout error: {}'.format(e))
@@ -179,6 +216,7 @@ class NSX:
         try:
             r = requests.get('https://' + self.nsx_ip + '/api/4.0/edges', auth=(self.login, self.pswd), verify=False, headers=self.headers)
             # pprint(r.text)
+            print(r)
 
         except requests.exceptions.Timeout as e:
             print('connect - Timeout error: {}'.format(e))
@@ -203,6 +241,7 @@ class NSX:
         try:
             r = requests.delete('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid, auth=(self.login, self.pswd), verify=False, headers=self.headers)
 
+            print(r)
         except requests.exceptions.Timeout as e:
             print('connect - Timeout error: {}'.format(e))
         except requests.exceptions.HTTPError as e:
@@ -221,6 +260,7 @@ class NSX:
         try:
             r = requests.get('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid, auth=(self.login, self.pswd), verify=False, headers=self.headers)
             # pprint(r.text)
+            print(r)
             i = r.json()
             if i['vnics']['vnics'][0]['addressGroups']['addressGroups']:
                 ip = i['vnics']['vnics'][0]['addressGroups']['addressGroups'][0]['primaryAddress']
@@ -243,6 +283,7 @@ class NSX:
         try:
             r = requests.put('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid + '/routing/config/bgp',
                                  data=cfg, auth=(self.login, self.pswd), verify=False, headers=self.headers)
+            print(r)
 
         except requests.exceptions.Timeout as e:
             print('connect - Timeout error: {}'.format(e))
@@ -260,6 +301,7 @@ class NSX:
         try:
             r = requests.put('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid + '/routing/config/global',
                                  data=cfg, auth=(self.login, self.pswd), verify=False, headers=self.headers)
+            print(r)
 
         except requests.exceptions.Timeout as e:
             print('connect - Timeout error: {}'.format(e))
@@ -271,4 +313,82 @@ class NSX:
             print('connect - TooManyRedirects error: {}'.format(e))
         except (ValueError, KeyError, TypeError) as e:
             print('connect - JSON format error: {}'.format(e))
+
+
+
+    def cfgha(self, cfg, edgeid):
+        try:
+            r = requests.put('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid + '/highavailability/config',
+                                 data=cfg, auth=(self.login, self.pswd), verify=False, headers=self.headers)
+            print(r)
+
+        except requests.exceptions.Timeout as e:
+            print('connect - Timeout error: {}'.format(e))
+        except requests.exceptions.HTTPError as e:
+            print('connect - HTTP error: {}'.format(e))
+        except requests.exceptions.ConnectionError as e:
+            print('connect - Connection error: {}'.format(e))
+        except requests.exceptions.TooManyRedirects as e:
+            print('connect - TooManyRedirects error: {}'.format(e))
+        except (ValueError, KeyError, TypeError) as e:
+            print('connect - JSON format error: {}'.format(e))
+
+
+
+    def cfgappliances(self, cfg, edgeid):
+        try:
+            r = requests.put('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid + '/appliances',
+                                 data=cfg, auth=(self.login, self.pswd), verify=False, headers=self.headers)
+            print(r)
+
+        except requests.exceptions.Timeout as e:
+            print('connect - Timeout error: {}'.format(e))
+        except requests.exceptions.HTTPError as e:
+            print('connect - HTTP error: {}'.format(e))
+        except requests.exceptions.ConnectionError as e:
+            print('connect - Connection error: {}'.format(e))
+        except requests.exceptions.TooManyRedirects as e:
+            print('connect - TooManyRedirects error: {}'.format(e))
+        except (ValueError, KeyError, TypeError) as e:
+            print('connect - JSON format error: {}'.format(e))
+
+
+    def cfgappliances(self, cfg, edgeid):
+        # It returns haIndex
+        try:
+            r = requests.get('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid + '/appliances',
+                                 data=cfg, auth=(self.login, self.pswd), verify=False, headers=self.headers)
+            print(r)
+
+        except requests.exceptions.Timeout as e:
+            print('connect - Timeout error: {}'.format(e))
+        except requests.exceptions.HTTPError as e:
+            print('connect - HTTP error: {}'.format(e))
+        except requests.exceptions.ConnectionError as e:
+            print('connect - Connection error: {}'.format(e))
+        except requests.exceptions.TooManyRedirects as e:
+            print('connect - TooManyRedirects error: {}'.format(e))
+        except (ValueError, KeyError, TypeError) as e:
+            print('connect - JSON format error: {}'.format(e))
+
+"""
+
+    def cfghaAdminState(self, cfg, edgeidi, haindex):
+        try:
+            r = requests.put('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid + '/appliancesi/' + haindex,
+                                 data=cfg, auth=(self.login, self.pswd), verify=False, headers=self.headers)
+            print(r)
+
+        except requests.exceptions.Timeout as e:
+            print('connect - Timeout error: {}'.format(e))
+        except requests.exceptions.HTTPError as e:
+            print('connect - HTTP error: {}'.format(e))
+        except requests.exceptions.ConnectionError as e:
+            print('connect - Connection error: {}'.format(e))
+        except requests.exceptions.TooManyRedirects as e:
+            print('connect - TooManyRedirects error: {}'.format(e))
+        except (ValueError, KeyError, TypeError) as e:
+            print('connect - JSON format error: {}'.format(e))
+
+"""
 

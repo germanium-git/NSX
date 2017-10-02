@@ -1,0 +1,13 @@
+# Created by .ignore support plugin (hsz.mobi)
+!inputs/nsx.yml
+!inputs/pe_primary.yml
+!inputs/pe_secondary.yml
+inputs/*
+
+.idea/*
+
+alarms.txt
+.idea/
+__pycache__/
+
+nsx.pyc
