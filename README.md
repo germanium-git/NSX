@@ -13,12 +13,6 @@ These are the python modules needed to run the scrips. Install those by using pi
 * yaml
 * reqests
 
-```sh
-$ cd dillinger
-$ npm install -d
-$ node app
-```
-
 
 ### How to use this project
 ##### Inventory files
