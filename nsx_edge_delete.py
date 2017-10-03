@@ -7,7 +7,7 @@ from nsx import credentials
 edgename = raw_input("Edge name: ")
 
 
-inputs = 'inputs/nsx_mylab.yml'
+inputs = 'inputs/nsx.yml'
 
 # NSX Manager credentials
 cred = credentials(inputs)

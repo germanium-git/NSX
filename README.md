@@ -30,6 +30,8 @@ $ cat inputs/nsx_mylab.yml
   banner: The vSphere in myLab will be modified
   # Specify the Transport zone in which logical switches will be created
   vdnScopeId: vdnscope-1        # put an appropriate Transport zone here
+  # Specify the naming convention for logical switches
+  lsw_name: ABC-lswitch-10.20.30.40m28
 ```
 
 ##### nsx_switch_create.py

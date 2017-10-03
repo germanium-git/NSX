@@ -69,3 +69,4 @@ else:
         cprint('Segment-ID: ' + str(swid[1]), 'green')
     else:
         cprint("\nThe switch doesn't exist", 'red')
+

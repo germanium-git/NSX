@@ -5,8 +5,10 @@
   # Password is optional. Comment it and enter the password in input dialog.
   passw: mypass
 
-  banner: The vSphere in myDC will be modified
+  banner: The vSphere in myLab will be modified
 
   # Specify the Transport zone in which logical switches will be created
   vdnScopeId: vdnscope-x        # transport zone ID
 
+  # Specify the naming convention for logical switches
+  lsw_name: ABC-lswitch-10.20.30.40m28

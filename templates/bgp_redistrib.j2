@@ -1,14 +1,21 @@
-<routing>
 <bgp>
+<enabled>true</enabled> <!-- Optional. Default is false -->
+<localAS>{{bgp.localAS}}</localAS> <!-- Valid values are : 1-65534 -->
 <bgpNeighbours>
 <bgpNeighbour>
+<ipAddress>{{bgp.neighbor}}</ipAddress> <!-- IPv4 only. IPv6 support not supported -->
+<remoteAS>{{bgp.remoteAS}}</remoteAS> <!-- Valid values are 0-65535 -->
+<weight>60</weight> <!-- Optional. Default is 60. Valid values are 0-65535 -->
+<holdDownTimer>15</holdDownTimer> <!-- Optional. Default is 180 seconds. Valid values are : 2-65535. -->
+<keepAliveTimer>5</keepAliveTimer> <!-- Optional. Default is 60 seconds. Valid values are : 1-65534. -->
+<password>{{bgp.bgp_md5}}</password> <!-- Optional -->
 <bgpFilters>
 <bgpFilter>
 <direction>out</direction>
 <action>deny</action>
 <network>0.0.0.0/0</network>
 </bgpFilter>
-{% for item in routes %}
+{% for item in redistrib %}
 <bgpFilter>
 <direction>out</direction>
 <action>permit</action>
@@ -34,26 +41,6 @@
 </rule>
 </rules>
 </redistribution>
+<gracefulRestart>true</gracefulRestart>
+<defaultOriginate>false</defaultOriginate>
 </bgp>
-<staticRouting>
-<staticRoutes>
-<route>
-<mtu>1500</mtu>
-<description></description> <!-- Optional -->
-<type>user</type>
-<vnic>1</vnic>
-<network>192.168.40.0/24</network>
-<nextHop>172.16.40.3</nextHop>
-<adminDistance>1</adminDistance>
-</route>
-<route>
-<mtu>1500</mtu>
-<description></description>
-<type>user</type>
-<vnic>1</vnic>
-<network>0.0.0.0/0</network>
-<nextHop>172.16.40.2</nextHop>
-<adminDistance>250</adminDistance>
-</route>
-</staticRoutes>
-</staticRouting>

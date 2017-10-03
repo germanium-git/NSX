@@ -1,0 +1,22 @@
+<staticRouting>
+{% if defaultRoute is defined %}
+<defaultRoute>
+<description></description> <!-- Optional -->
+<vnic>0</vnic>
+<gatewayAddress>{{defaultRoute}}</gatewayAddress>
+</defaultRoute>
+{% endif %}
+<staticRoutes>
+{% for item in static %}
+<route>
+<description></description> <!-- Optional -->
+<vnic>{{item.vnic}}</vnic>
+<network>{{item.route}}</network>
+<nextHop>{{item.next_hop}}</nextHop>
+<mtu>1500</mtu>
+<adminDistance>{{item.admin_distance}}</adminDistance>
+<type>user</type>
+</route>
+{% endfor %}
+</staticRoutes>
+</staticRouting>

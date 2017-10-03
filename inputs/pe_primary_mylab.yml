@@ -2,12 +2,7 @@
   username: admin
   passw: mypassword#1234567
 
-  localAS: 65001
-  remoteAS: 65002
-  bgp_md5: TEST
-  neighbor: 10.0.0.1
-
-  banner: The NSX in myDC will be modified
+  banner: The NSX in myLab will be modified
 
   datacenterMoid: datacenter-x  # Update the datacenter ID
 
@@ -30,13 +25,16 @@
   interconnect:
     address: 172.16.10.1
     netmask: 255.255.255.248
+  bgp:
+    localAS: 65001
+    remoteAS: 65002
+    bgp_md5: TEST
+    neighbor: 10.0.0.1
   static:
-    route1:
-      prefix: 192.168.10.1/24
+    - route:  192.168.10.1/24
       next-hop: 172.16.10.3
       admin-distance: 1
-    route2:
-      prefix: 0.0.0.0/0
+    - route: 0.0.0.0/0
       next-hop: 172.16.10.2
       admin-distance: 250
 

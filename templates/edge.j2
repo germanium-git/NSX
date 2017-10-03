@@ -6,12 +6,14 @@
 <appliances>
 <applianceSize>compact</applianceSize>
 <appliance>
+<highAvailabilityIndex>0</highAvailabilityIndex>
 <resourcePoolId>{{p_resourcePoolId}}</resourcePoolId>
 <datastoreId>{{p_datastoreId}}</datastoreId>
 </appliance>
 {# This is needed for HA #}
 {% if s_resourcePoolId is defined and s_datastoreId is defined %}
 <appliance>
+<highAvailabilityIndex>1</highAvailabilityIndex>
 <resourcePoolId>{{s_resourcePoolId}}</resourcePoolId>>
 <datastoreId>{{s_datastoreId}}</datastoreId>
 </appliance>

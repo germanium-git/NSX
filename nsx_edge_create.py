@@ -13,7 +13,7 @@ import sys
 # Select the instance of NSX manager to be configured - as argument
 inputs = 'inputs/nsx_' + seldc(sys.argv[1:]) + '.yml'
 # Select the instance of NSX manager to be configured - manually
-# inputs = raw_input("Choose NSX Manager credentila specification [%s]:"  % 'inputs/nsx_mylab.yml') or 'inputs/nsx_mylab.yml'
+# inputs = raw_input("Choose NSX Manager credentila specification [%s]:"  % 'inputs/nsx.yml') or 'inputs/nsx.yml'
 
 
 # Specify parameters of the Edge to be created - as argument
@@ -72,22 +72,17 @@ else:
     xml_edge = createbody("templates/edge.j2", pe)
 
     # Create edge
-    print('Wait for task to be completed')
+    print('Wait for tasks to be completed')
+    print('Deploying the edge VM - {0} ---------'.format(pe['name']))
     nsx.createedge(xml_edge)
 
     # Configure HA
 
     if pe['ha']:
-        # Find edge id
-        print('Configuring HA')
-        #print('Searching for edge-id')
+        print('Searching for edge-id')
         edgeid = nsx.findedge(pe['name'])
         xml_ha = createbody("templates/ha.j2", pe)
-        print('Enabling HA for {0}'.format(pe['name']))
+        print('Enabling HA ---------')
         nsx.cfgha(xml_ha, edgeid)
-
-        #print('Relocating appliances')
-        #xml_appl = createbody("templates/appliances.j2", pe)
-        #nsx.cfgappliances(xml_appl, edgeid)
 
 

@@ -46,6 +46,10 @@ def seldc(argv):
 
 
 def credentials(inputfile):
+    """
+    :param:	path to an inventory file
+    :return:    tuple with (ip, account , password)
+    """
     # Import credentials from YAML file
     with open(inputfile, 'r') as f:
         s = f.read()
@@ -296,6 +300,72 @@ class NSX:
         except (ValueError, KeyError, TypeError) as e:
             print('connect - JSON format error: {}'.format(e))
 
+    def getbgp(self, edgeid):
+        try:
+            r = requests.get('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid + '/routing/config/bgp',
+                                 auth=(self.login, self.pswd), verify=False, headers=self.headers)
+            print(r)
+
+            xmlbody = r
+
+        except requests.exceptions.Timeout as e:
+            print('connect - Timeout error: {}'.format(e))
+        except requests.exceptions.HTTPError as e:
+            print('connect - HTTP error: {}'.format(e))
+        except requests.exceptions.ConnectionError as e:
+            print('connect - Connection error: {}'.format(e))
+        except requests.exceptions.TooManyRedirects as e:
+            print('connect - TooManyRedirects error: {}'.format(e))
+        except (ValueError, KeyError, TypeError) as e:
+            print('connect - JSON format error: {}'.format(e))
+
+        return xmlbody
+
+    def cfgstatic(self, cfg, edgeid):
+        try:
+            r = requests.put('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid + '/routing/config/static',
+                                 data=cfg, auth=(self.login, self.pswd), verify=False, headers=self.headers)
+            print(r)
+
+        except requests.exceptions.Timeout as e:
+            print('connect - Timeout error: {}'.format(e))
+        except requests.exceptions.HTTPError as e:
+            print('connect - HTTP error: {}'.format(e))
+        except requests.exceptions.ConnectionError as e:
+            print('connect - Connection error: {}'.format(e))
+        except requests.exceptions.TooManyRedirects as e:
+            print('connect - TooManyRedirects error: {}'.format(e))
+        except (ValueError, KeyError, TypeError) as e:
+            print('connect - JSON format error: {}'.format(e))
+
+    def getstatic(self, edgeid):
+        try:
+            r = requests.get('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid + '/routing/config/static',
+                                 auth=(self.login, self.pswd), verify=False, headers=self.headers)
+            print(r)
+            routes = r.json()['staticRoutes']['staticRoutes']
+            statics = []
+            for route in routes:
+                old_route = {}
+                old_route['vnic'] = int(route['vnic'].encode('ascii','ignore'))
+                old_route['next_hop'] = route['nextHop'].encode('ascii','ignore')
+                old_route['route'] = route['network'].encode('ascii','ignore')
+                old_route['admin_distance'] = int(route['adminDistance'])
+                statics.append(old_route)
+
+        except requests.exceptions.Timeout as e:
+            print('connect - Timeout error: {}'.format(e))
+        except requests.exceptions.HTTPError as e:
+            print('connect - HTTP error: {}'.format(e))
+        except requests.exceptions.ConnectionError as e:
+            print('connect - Connection error: {}'.format(e))
+        except requests.exceptions.TooManyRedirects as e:
+            print('connect - TooManyRedirects error: {}'.format(e))
+        except (ValueError, KeyError, TypeError) as e:
+            print('connect - JSON format error: {}'.format(e))
+
+        return statics        
+
 
     def cfgglobrouting(self, cfg, edgeid):
         try:
@@ -353,11 +423,11 @@ class NSX:
             print('connect - JSON format error: {}'.format(e))
 
 
-    def cfgappliances(self, cfg, edgeid):
+    def getappliances(self, cfg, edgeid):
         # It returns haIndex
         try:
             r = requests.get('https://' + self.nsx_ip + '/api/4.0/edges/edge-' + edgeid + '/appliances',
-                                 data=cfg, auth=(self.login, self.pswd), verify=False, headers=self.headers)
+                                 auth=(self.login, self.pswd), verify=False, headers=self.headers)
             print(r)
 
         except requests.exceptions.Timeout as e:
