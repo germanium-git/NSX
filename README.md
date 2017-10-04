@@ -90,14 +90,14 @@ $ nsx_edge_create.py -i mylab
     bgp_md5: TST
     neighbor: 10.255.0.1
   static:
-    route1:
-      prefix: 192.168.10.1/24
-      next-hop: 172.16.10.3
-      admin-distance: 1
-    route2:
-      prefix: 0.0.0.0/0
-      next-hop: 172.16.10.2
-      admin-distance: 250
+    - route:  192.168.10.0/24
+      next_hop: 172.16.10.3
+      admin_distance: 1
+      vnic: 1
+    - route: 0.0.0.0/0
+      next_hop: 172.16.10.2
+      admin_distance: 250
+      vnic: 1
 
   # Uncomment this if default gateway needs to be configured
   # Note the default gateway and static route 0.0.0.0/0 are mutually exclusive
