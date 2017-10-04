@@ -1,5 +1,13 @@
 #! /usr/bin/env python
 
+"""
+===================================================================================================
+   Author:         Petr Nemec
+   Description:    Configures Static routing
+   Date:           2017-10-04
+===================================================================================================
+"""
+
 from nsx import NSX
 from nsx import credentials
 from nsx import createbody
@@ -46,23 +54,24 @@ except:
     print("Edge doesn't exist")
     sys.exit(1)
 
-# Retrieving existing static routes --------------------------------------------
+# Retrieving existing static routes -----------------------------------------------------
 print('\nRetrieving existing static routes')
 current_routes = nsx.getstatic(edgeid)
 
 cprint('\nReview the static routes to be configured', 'red')
 cprint('These are the existing static routes: ', 'yellow')
 for i in range(len(current_routes)):
-    #print(current_routes[i]['route'] + ' -> ' + current_routes[i]['next_hop'] + ' -> vnic-' +  current_routes[i]['vnic'])
-    print(current_routes[i]['route'] + ' -> ' + current_routes[i]['next_hop'] + ' -> vnic-' +  str(current_routes[i]['vnic']) + ', AD ' + str(current_routes[i]['admin_distance']))
+    print(current_routes[i]['route'] + ' -> ' + current_routes[i]['next_hop'] + ' -> vnic-' +
+          str(current_routes[i]['vnic']) + ', AD ' + str(current_routes[i]['admin_distance']))
 
-# List all routes to be added --------------------------------------------
+# List all routes to be added -----------------------------------------------------------
 
 cprint('\nThese routes are to be added: ', 'yellow')
 for i in range(len(pe['static'])):
-    print(pe['static'][i]['route'] + ' -> ' + pe['static'][i]['next_hop'] + ' -> vnic-' +  str(pe['static'][i]['vnic']) + ', AD ' + str(pe['static'][i]['admin_distance']))
+    print(pe['static'][i]['route'] + ' -> ' + pe['static'][i]['next_hop'] + ' -> vnic-' +
+          str(pe['static'][i]['vnic']) + ', AD ' + str(pe['static'][i]['admin_distance']))
 
-# Remove dupplicate routes & check if any new routes will be added ----- -------------------
+# Remove dupplicate routes & check if any new routes will be added ----- ----------------
 print('\nSearching for dupplicate routes')
 
 ddiff = DeepDiff(current_routes, pe['static'], ignore_order=True)
@@ -71,13 +80,14 @@ try:
     unique_routes = (ddiff['iterable_item_added'].values())
     cprint('Only unique routes can be added: ', 'yellow')
     for i in range(len(unique_routes)):
-        print(unique_routes[i]['route'] + ' -> ' + unique_routes[i]['next_hop'] + ' -> vnic-' +  str(unique_routes[i]['vnic']) + ', AD ' + str(unique_routes[i]['admin_distance']))
+        print(unique_routes[i]['route'] + ' -> ' + unique_routes[i]['next_hop'] + ' -> vnic-' +
+              str(unique_routes[i]['vnic']) + ', AD ' + str(unique_routes[i]['admin_distance']))
 except:
     unique_routes = []
     print("No new routes found")
     
 
-# Check if the default route is to be configured --------------------------------------------
+# Check if the default route is to be configured ----------------------------------------
 try:
     cprint('\nDefault route will be set to: %s' % pe['defaultRoute'])
 except:
@@ -94,7 +104,7 @@ agree = raw_input("Do you want to apply these changes? y/n[N]: " or 'N')
 pe['static'] = current_routes + unique_routes
 
 
-# Check if the default route is to be configured --------------------------------------------
+# Check if the default route is to be configured ----------------------------------------
 try:
     cprint('\nDefault route will be set to: %s' % pe['defaultRoute'])
 except:
@@ -105,8 +115,7 @@ if agree != "Y" and agree != "y":
     print("Script execution canceled")
     sys.exit(1)
 else:
-    # Configure Static routing -----------------------------------------------------
-
+    # Configure Static routing ----------------------------------------------------------
     # Define XML Body - Static
     xml_Static = createbody("templates/static.j2", pe)
 

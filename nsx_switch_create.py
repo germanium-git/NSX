@@ -1,11 +1,18 @@
 #! /usr/bin/env python
 
+"""
+===================================================================================================
+   Author:         Petr Nemec
+   Description:    Configures logical switch
+   Date:           2017-10-04
+===================================================================================================
+"""
+
 from nsx import NSX
 from nsx import createbody
 from nsx import credentials
 from nsx import seldc
 import yaml
-from pprint import pprint
 from termcolor import cprint
 import sys
 
@@ -43,7 +50,7 @@ agree = raw_input("Do you want to apply these changes? y/n[N]: " or 'N')
 # Proceed with updating configuration
 if agree != "Y" and agree != "y":
     print("Script execution canceled")
-    sys.exit
+    sys.exit(1)
 else:
     # Create an instance of Class NSX
     cred = credentials(inputs)

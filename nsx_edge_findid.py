@@ -1,17 +1,29 @@
 #! /usr/bin/env python
 
+"""
+===================================================================================================
+   Author:         Petr Nemec
+   Description:    Resolves edge name to edge-id
+   Date:           2017-10-04
+===================================================================================================
+"""
+
 from nsx import NSX
-import getpass
-edgename =  raw_input("Edge name: ")
+from nsx import credentials
+from nsx import seldc
+import sys
 
 
-nsx_ip = raw_input("NSX manager IP [%s]: " % '10.33.94.154') or '10.33.94.154'
-account = raw_input("Account [%s]: " % 'admin') or 'admin'
-passw = getpass.getpass(prompt='Password: ', stream=None)
+# NSX Manager credentials
+cred = credentials(inputs)
+nsx = NSX(*cred)
+
+# Input the name of edge
+edgename = raw_input("Edge name: ")
+
+# Select the instance of NSX manager to be configured - as argument
+inputs = 'inputs/nsx_' + seldc(sys.argv[1:]) + '.yml'
 
 
-hgalab = NSX(nsx_ip, account, passw)
-
-
-print(hgalab.findedge(edgename))
+print(nsx.findedge(edgename))
 

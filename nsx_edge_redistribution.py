@@ -1,5 +1,13 @@
 #! /usr/bin/env python
 
+"""
+===================================================================================================
+   Author:         Petr Nemec
+   Description:    Configures routing redistribution from Static to BGP
+   Date:           2017-10-04
+===================================================================================================
+"""
+
 from nsx import NSX
 from nsx import credentials
 from nsx import createbody
@@ -46,25 +54,18 @@ except:
     print("Edge doesn't exist")
     sys.exit(1)
 
-# Retrieving existing static routes --------------------------------------------
+# Retrieving existing static routes -----------------------------------------------------
 print('\nRetrieving existing static routes')
 current_routes = nsx.getstatic(edgeid)
 
 cprint('\nReview the configuration changes', 'red')
 cprint('These are the existing static routes already configured on the edge: ', 'yellow')
 for i in range(len(current_routes)):
-    #print(current_routes[i]['route'] + ' -> ' + current_routes[i]['next_hop'] + ' -> vnic-' +  current_routes[i]['vnic'])
-    print(current_routes[i]['route'] + ' -> ' + current_routes[i]['next_hop'] + ' -> vnic-' +  str(current_routes[i]['vnic']) + ', AD ' + str(current_routes[i]['admin_distance']))
+    print(current_routes[i]['route'] + ' -> ' + current_routes[i]['next_hop'] + ' -> vnic-' +
+          str(current_routes[i]['vnic']) + ', AD ' + str(current_routes[i]['admin_distance']))
 
-"""
-# List all routes to be added into redistribution -------------------------------------------
 
-cprint('\nThese are the routes which   : ', 'yellow')
-for i in range(len(pe['static'])):
-    print(pe['static'][i]['route'] + ' -> ' + pe['static'][i]['next_hop'] + ' -> vnic-' +  str(pe['static'][i]['vnic']) + ', AD ' + str(pe['static'][i]['admin_distance']))
-"""
-
-# Remove dupplicate routes --------------------------------------------
+# Remove duplicate routes ---------------------------------------------------------------
 
 ddiff = DeepDiff(current_routes, pe['static'], ignore_order=True)
 
@@ -74,7 +75,7 @@ except:
     new_routes = []
 
 
-# Remove the default route --------------------------------------------
+# Remove the default route --------------------------------------------------------------
 pe['redistrib'] = []
 
 pe['static'] = current_routes + new_routes
@@ -86,7 +87,8 @@ for i in range(len(pe['static'])):
 cprint('These static routes will be redistributed into BGP: ', 'yellow')
 print('Note: dupplicate routes and the default route have been removed')
 for i in range(len(pe['redistrib'])):
-    print(pe['redistrib'][i]['route'] + ' -> ' + pe['redistrib'][i]['next_hop'] + ' -> vnic-' +  str(pe['redistrib'][i]['vnic']) + ', AD ' + str(pe['redistrib'][i]['admin_distance']))
+    print(pe['redistrib'][i]['route'] + ' -> ' + pe['redistrib'][i]['next_hop'] + ' -> vnic-' +
+          str(pe['redistrib'][i]['vnic']) + ', AD ' + str(pe['redistrib'][i]['admin_distance']))
 print('\n')
 
 cprint(pe['banner'], 'yellow')
@@ -94,12 +96,12 @@ agree = raw_input("Do you want to apply these changes? y/n[N]: " or 'N')
 
 
 
-# Proceed with updating configuration
+# Proceed with updating the configuration
 if agree != "Y" and agree != "y":
     print("Script execution canceled")
     sys.exit(1)
 else:
-    # Configure route redistribution from Static to BGP  routing -----------------------------------------------------
+    # Configure route redistribution from Static to BGP  routing ------------------------
 
     # Define XML Body - Redistribution
     xml_Redistrib = createbody("templates/bgp_redistrib.j2", pe)

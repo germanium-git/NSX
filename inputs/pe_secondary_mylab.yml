@@ -29,8 +29,11 @@
     bgp_md5: TEST
     neighbor: 10.0.0.5
   static:
-    - route:  192.168.10.1/24
-      next-hop: 172.16.10.3
-      admin-distance: 1
+    - route:  192.168.10.0/24
+      next_hop: 172.16.10.3
+      admin_distance: 1
+      vnic: 1
 
-  defaultRoute: False
+  # Uncomment this if default gateway need to be configured
+  # Note the default gateway and static route 0.0.0.0/0 are mutualy exclusive
+  # defaultRoute: 10.255.0.1

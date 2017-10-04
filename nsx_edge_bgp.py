@@ -1,13 +1,20 @@
 #! /usr/bin/env python
 
+"""
+===================================================================================================
+   Author:         Petr Nemec
+   Description:    Configure BGP on NSX edges
+   Date:           2017-10-04
+===================================================================================================
+"""
+
 from nsx import NSX
 from nsx import credentials
 from nsx import createbody
 from nsx import seldc
 import yaml
-
-from termcolor import cprint
 import sys
+
 
 # Select the instance of NSX manager to be configured - as argument
 inputs = 'inputs/nsx_' + seldc(sys.argv[1:]) + '.yml'
@@ -42,7 +49,7 @@ try:
     edgeid = nsx.findedge(pe['name'])
 except:
     print("Edge doesn't exist")
-    sys.exit
+    sys.exit(1)
 
 # Check uplink IP address ---------------------------------------------------
 
@@ -51,7 +58,7 @@ print('\nChecking the uplink IP address')
 pe['routerId'] = nsx.getuplinkip(edgeid)
 if pe['routerId'] == 'None':
     print("Uplink port vNIC_0 has no Ip address")
-    sys.exit
+    sys.exit(1)
 
 
 # Configure Router ID -----------------------------------------------------
