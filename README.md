@@ -99,7 +99,7 @@ $ nsx_edge_create.py -i mylab
       next-hop: 172.16.10.2
       admin-distance: 250
 
-  # Uncomment this if default gateway need to be configured
+  # Uncomment this if default gateway needs to be configured
   # Note the default gateway and static route 0.0.0.0/0 are mutually exclusive
   # defaultRoute: 10.255.0.1
 ```
