@@ -12,7 +12,7 @@ These are the python modules needed to run the scrips. Install those by using pi
 * jinja2
 * yaml
 * reqests
-
+* deepdiff
 
 ### How to use this project
 ##### Inventory files
@@ -36,7 +36,7 @@ $ cat inputs/nsx_mylab.yml
 
 ##### nsx_switch_create.py
 This script creates a logical switch in a specific Transport zone.
-No additional parametres are needed but only the name of the logical switch to be created. The transport zone need to be specified prior executing the script in the inputs/nsx_mylab.yml file.
+No additional parameters are needed but only the name of the logical switch to be created. The transport zone need to be specified prior executing the script in the inputs/nsx_mylab.yml file.
 ```sh
 $ nsx_switch_create.py -i mylab
 ```
@@ -48,10 +48,8 @@ $ nsx_switch_findid.py -i mylab
 ```
 
 ##### nsx_edge_create.py
-It creates a new instance of the NSX edge following the specified parametres such as:
+It creates a new instance of the NSX edge following the specified parameters such as:
 - SSH access for monitoring and troubleshooting purposes
-- BGP routing
-- Static routing
 - High Availability mode
 - Resource pools & datastores where the edge should be deployed.
 - Uplink interface - a distributed port group
@@ -69,12 +67,7 @@ $ nsx_edge_create.py -i mylab
   username: admin
   passw: Pass123456789!
 
-  localAS: 65001
-  remoteAS: 65002
-  bgp_md5: someMD5key
-  neighbor: 10.0.0.1
-
-  datacenterMoid: datacenter-21 # the datacenter ID
+  datacenterMoid: datacenter-x # the datacenter ID
   banner: The NSX in myLAB will be modified
 
   # Specify the primary Provider Edge
@@ -91,6 +84,11 @@ $ nsx_edge_create.py -i mylab
   interconnect:
     address: 172.16.10.1
     netmask: 255.255.255.248
+  bgp:
+    localAS: 64634
+    remoteAS: 64620
+    bgp_md5: TST
+    neighbor: 10.255.0.1
   static:
     route1:
       prefix: 192.168.10.1/24
@@ -101,8 +99,33 @@ $ nsx_edge_create.py -i mylab
       next-hop: 172.16.10.2
       admin-distance: 250
 
-  defaultRoute: False
+  # Uncomment this if default gateway need to be configured
+  # Note the default gateway and static route 0.0.0.0/0 are mutually exclusive
+  # defaultRoute: 10.255.0.1
 ```
+
+
+##### nsx_edge_bgp.py
+It configures BGP peering with routers located in an external network.
+
+```sh
+$ nsx_edge_bgp.py -i mylab
+```
+
+##### nsx_edge_static.py
+It configures static routes and the default gateway specified in a inputs/pe_*.yaml file. Note the default gateway can't be configured if the route 0.0.0.0/0 is also specified as one of the static routes in the *.yaml inputs file.
+
+```sh
+$ nsx_edge_static.py -i mylab
+```
+
+##### nsx_edge_redistribution.py
+It configures static route redistribution into BGP. Default route is not redistributed into BGP.
+
+```sh
+$ nsx_edge_redistribution.py -i mylab
+```
+
 
 More info on how to use the scripts and a few demo examples can be found on https://germanium.cz
 
