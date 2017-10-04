@@ -106,7 +106,7 @@ else:
     # Define XML Body - Redistribution
     xml_Redistrib = createbody("templates/bgp_redistrib.j2", pe)
 
-    print(xml_Redistrib)
+    # print(xml_Redistrib)
     # Configure redistribution
     print('\nReconfiguring BGP and route redistribution from Static to BGP')
     nsx.cfgbgp(xml_Redistrib, edgeid)
