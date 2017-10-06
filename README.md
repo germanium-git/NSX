@@ -127,5 +127,4 @@ $ nsx_edge_redistribution.py -i mylab
 ```
 
 
-More info on how to use the scripts and a few demo examples can be found on https://germanium.cz
 
