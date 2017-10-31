@@ -20,9 +20,22 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 
+def getiventories(mypath):
+    """
+    :param argv: Path to inventory files
+    :return:     list of inventories
+    """
+
+    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    inv_list = []
+    for file in onlyfiles:
+        inv_list.append(file.split('_')[-1][:-4])
+    return inv_list
+
+
 def seldc(argv):
     """
-    :param argv: Command line arguments
+    :param argv: Command line argumets
     :return:     Name of the inventory file
     """
     inp = ''
@@ -35,15 +48,15 @@ def seldc(argv):
         sys.exit()
     for opt, arg in opts:
         if opt == '-h':
-            print 'Use this script with in nventory parameter'
-            print(' -i lpr - for LPR lab ')
-            print(' -i hga - for HGA lab ')
+            print 'Use this script with inventory parameter'
+            print(' -i myvmware - for MyVMware lab ')
             sys.exit()
         elif opt in ("-i"):
-            if arg == 'lpr' or arg == 'hga':
+            if arg in getiventories(mypath):
                 inp = arg
             else:
                 print('Invalid argument')
+                print('Only these inventories are valid: ', getiventories(mypath))
                 sys.exit()
     if not(opts):
         print 'Use this script with the parameter e.g.:'

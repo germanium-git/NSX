@@ -1,8 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
+inputs/*
+inputs/resources.txt
 !inputs/nsx_mylab.yml
 !inputs/pe_primary_mylab.yml
 !inputs/pe_secondary_mylab.yml
-inputs/*
 
 .idea/*
 
@@ -10,4 +11,4 @@ alarms.txt
 .idea/
 __pycache__/
 
-nsx.pyc
+
