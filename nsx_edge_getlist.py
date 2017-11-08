@@ -12,6 +12,7 @@ from nsx import NSX
 from nsx import credentials
 from nsx import seldc
 import sys
+from pprint import pprint
 
 # Select the vSphere to be modified
 inputs = 'inputs/nsx_' + seldc(sys.argv[1:]) + '.yml'
@@ -23,5 +24,5 @@ nsx = NSX(*cred)
 
 
 
-print(nsx.getedges())
+pprint(nsx.getedges())
 

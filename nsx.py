@@ -263,7 +263,7 @@ class NSX:
         try:
             r = requests.get('https://' + self.nsx_ip + '/api/4.0/edges', auth=(self.login, self.pswd),
                              verify=False, headers=self.headers)
-            pprint(r.text)
+            #pprint(r.text)
 
         except requests.exceptions.Timeout as e:
             print('connect - Timeout error: {}'.format(e))
