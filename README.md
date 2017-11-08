@@ -109,22 +109,34 @@ $ nsx_edge_create.py -i mylab
 It configures BGP peering with routers located in an external network.
 
 ```sh
-$ nsx_edge_bgp.py -i mylab
+$ ./nsx_edge_bgp.py -i mylab
 ```
 
 ##### nsx_edge_static.py
 It configures static routes and the default gateway specified in a inputs/pe_*.yaml file. Note the default gateway can't be configured if the route 0.0.0.0/0 is also specified as one of the static routes in the *.yaml inputs file.
 
 ```sh
-$ nsx_edge_static.py -i mylab
+$ ./nsx_edge_static.py -i mylab
 ```
 
 ##### nsx_edge_redistribution.py
 It configures static route redistribution into BGP. Default route is not redistributed into BGP.
 
 ```sh
-$ nsx_edge_redistribution.py -i mylab
+$ ./nsx_edge_redistribution.py -i mylab
 ```
 
+##### nsx_edge_getlist.py
+It retrieves the data about all edges, i.e. edge-id and uuid
 
+```sh
+$ ./nsx_edge_getlist.py -i mylab
+```
+
+##### nsx_switch_getlist.py
+It retrieves the data about all logical switches, i.e. virtualwire-id and uuid
+
+```sh
+$ ./nsx_switch_getlist -i mylab
+```
 
