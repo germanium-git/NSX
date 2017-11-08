@@ -16,8 +16,15 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import sys
 import getopt
 
+from os import listdir
+from os.path import isfile, join
+
+
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+
+# Specify the inventory folder
+mypath = 'inputs'
 
 
 def getiventories(mypath):
