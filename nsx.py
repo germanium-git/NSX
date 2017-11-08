@@ -260,6 +260,7 @@ class NSX:
         :param:
         :return:    Directory of edges; it prints HTTP return code
         """
+        edges = {}
         try:
             r = requests.get('https://' + self.nsx_ip + '/api/4.0/edges', auth=(self.login, self.pswd),
                              verify=False, headers=self.headers)
@@ -276,8 +277,12 @@ class NSX:
         except (ValueError, KeyError, TypeError) as e:
             print('connect - JSON format error: {}'.format(e))
 
-        return r.json()['edgePage']['data']
+        #return r.json()['edgePage']['data']
 
+        for i in r.json()['edgePage']['data']:
+            edges[i['name']] = {'id': i['id'], 'nodeId': i['nodeId']}
+
+        return edges
 
 
     def findedge(self, edgename):
