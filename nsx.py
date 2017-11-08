@@ -22,7 +22,6 @@ from os.path import isfile, join
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-
 # Specify the inventory folder
 mypath = 'inputs'
 
