@@ -276,7 +276,7 @@ class NSX:
         except (ValueError, KeyError, TypeError) as e:
             print('connect - JSON format error: {}'.format(e))
 
-        return r.raw()
+        return r.json()['edgePage']['data']
 
 
 
