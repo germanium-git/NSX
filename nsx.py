@@ -135,7 +135,7 @@ class NSX:
         try:
             r = requests.get('https://' + self.nsx_ip + '/api/2.0/vdn/virtualwires', auth=(self.login, self.pswd),
                              verify=False, headers=self.headers)
-            pprint(r.text)
+            #pprint(r.text)
 
         except requests.exceptions.Timeout as e:
             print('connect - Timeout error: {}'.format(e))
