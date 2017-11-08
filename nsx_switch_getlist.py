@@ -3,7 +3,7 @@
 """
 ===================================================================================================
    Author:         Petr Nemec
-   Description:    Get the edges
+   Description:    Get the switches
    Date:           2017-10-04
 ===================================================================================================
 """
@@ -24,5 +24,5 @@ nsx = NSX(*cred)
 
 
 
-pprint(nsx.getedges())
+pprint(nsx.getswitches())
 

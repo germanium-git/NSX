@@ -131,6 +131,7 @@ class NSX:
         :param:
         :return:    It prints out all logical switches
         """
+        switches = {}
         try:
             r = requests.get('https://' + self.nsx_ip + '/api/2.0/vdn/virtualwires', auth=(self.login, self.pswd),
                              verify=False, headers=self.headers)
@@ -147,8 +148,13 @@ class NSX:
         except (ValueError, KeyError, TypeError) as e:
             print('connect - JSON format error: {}'.format(e))
 
+
+        #return r.json()['dataPage']['data']
+
         for i in r.json()['dataPage']['data']:
-            print(i['name'], i['objectId'], i['vdnId'])
+            switches[i['name']] = {'objectId': i['objectId'], 'vdnId': i['vdnId']}
+
+        return switches
 
 
 
