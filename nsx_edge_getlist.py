@@ -13,7 +13,7 @@ from nsx import credentials
 from nsx import seldc
 import sys
 
-# Select the instance of NSX manager to be configured - as argument
+# Select the vSphere to be modified
 inputs = 'inputs/nsx_' + seldc(sys.argv[1:]) + '.yml'
 
 
@@ -21,10 +21,7 @@ inputs = 'inputs/nsx_' + seldc(sys.argv[1:]) + '.yml'
 cred = credentials(inputs)
 nsx = NSX(*cred)
 
-# Input the name of edge
-edgename = raw_input("Edge name: ")
 
 
-
-print(nsx.findedge(edgename))
+print(nsx.getedges())
 
